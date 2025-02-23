@@ -5,14 +5,20 @@ import pandas as pd
 M_x_values = np.arange(1.0, 4.01, 0.01)  # Mach 1 to 4 in steps of 0.01
 gamma = 1.4
 
-# Define functions for normal shock relations
+# Define function for total pressure ratio using the correct equation
+def total_pressure_ratio(M_x, gamma):
+    term1 = ((gamma + 1) * M_x**2) / ((gamma - 1) * M_x**2 + 2)
+    term2 = (gamma + 1) / (2 * gamma * M_x**2 - (gamma - 1))
+    P_ty_P_tx = (term1 ** (gamma / (gamma - 1))) * (term2 ** (1 / (gamma - 1)))
+    return P_ty_P_tx
+
+# Define function for normal shock relations
 def normal_shock_relations(M_x, gamma):
     M_y = np.sqrt((1 + ((gamma - 1) / 2) * M_x**2) / (gamma * M_x**2 - (gamma - 1) / 2))
-    P_ty_P_tx = ((1 + (gamma - 1) / 2 * M_x**2) ** (gamma / (gamma - 1))) / ((1 + (gamma - 1) / 2 * M_y**2) ** (gamma / (gamma - 1)))
     P_y_P_x = (1 + 2 * gamma / (gamma + 1) * (M_x**2 - 1))
     rho_y_rho_x = ((gamma + 1) * M_x**2) / ((gamma - 1) * M_x**2 + 2)
     T_y_T_x = P_y_P_x / rho_y_rho_x
-    
+    P_ty_P_tx = total_pressure_ratio(M_x, gamma)
     return [M_x, M_y, P_ty_P_tx, P_y_P_x, rho_y_rho_x, T_y_T_x]
 
 # Open file to create LaTeX table
