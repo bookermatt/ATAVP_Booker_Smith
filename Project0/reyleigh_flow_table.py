@@ -9,16 +9,16 @@ def phi(M, gamma):
     return (1 / M) * ((1 + gamma) / (1 + gamma * M**2))
 
 def Tt_Tt_star(M, gamma):
-    return ((gamma + 1) ** 2 * M**2) / (4 * gamma * M**2 - 2 * (gamma - 1))
+    return ((2 * (gamma + 1) * M**2) / (1 + gamma * M**2)**2) * (1 + ((gamma - 1) / 2) * M**2)
 
 def T_T_star(M, gamma):
-    return (gamma + 1) / (1 + gamma * M**2)
+    return (((gamma + 1)**2)**M**2) / ((1 + gamma * M**2)**2)
 
 def Pt_Pt_star(M, gamma):
-    return ((gamma + 1) / (1 + gamma * M**2)) ** (1 / (gamma - 1))
+    return ((gamma + 1) / (1 + gamma * M**2)) *((2 / (gamma + 1)) * (1 + ((gamma - 1) / 2 * M**2)))**(gamma / (gamma - 1))
 
 def P_P_star(M, gamma):
-    return (1 / M) * ((gamma + 1) / (1 + gamma * M**2))
+    return ((gamma + 1) / (1 + gamma * M**2))
 
 # Open file to create LaTeX table
 filename = "rayleigh_flow_table.tex"
@@ -34,7 +34,7 @@ with open(filename, "w") as file:
 """)
 
     file.write("\\section*{Rayleigh Flow Table for $\\gamma = 1.4$}\n")
-    file.write(r"""\begin{longtable}{ccccc}
+    file.write(r"""\begin{longtable}{cccccc}
 
 \toprule
 $M$ & $\phi(M^2)$ & $T_t/T_t^*$ & $T/T^*$ & $P_t/P_t^*$ & $P/P^*$ \\

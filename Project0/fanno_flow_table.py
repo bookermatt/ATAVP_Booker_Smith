@@ -6,19 +6,20 @@ gamma = 1.4
 
 # Fanno flow equations
 def friction_length(M, gamma):
-    return (1 / gamma) * ((gamma + 1) / (2 * M**2)) + np.log(M * np.sqrt((gamma + 1) / (2 + (gamma - 1) * M**2)))
+    return (1 / gamma) * ((1 / M**2) - 1) + ((gamma + 1) / (2 * gamma)) * np.log(((gamma + 1) * M**2) / (2 + (gamma - 1) * M**2))
 
-def entropy_ratio(M, gamma):
-    return np.log(((gamma + 1) * M**2) / (2 + (gamma - 1) * M**2))
+def I_Istar(M, gamma):
+    return (1 / M) * ((2 / (gamma + 1)) * (1 + ((gamma - 1) / 2) * M**2))**(gamma / (gamma - 1))
 
 def T_T_star(M, gamma):
-    return (1 + ((gamma - 1) / 2) * M**2) / (0.5 * (gamma + 1))
-
-def Pt_Pt_star(M, gamma):
-    return ((gamma + 1) / (2 + (gamma - 1) * M**2)) ** (gamma / (gamma - 1)) / M
+    return (gamma + 1) / (2 + (gamma - 1) * M**2)
 
 def P_P_star(M, gamma):
-    return 1 / M
+    return (1 / M) * np.sqrt((gamma + 1) / (2 + (gamma - 1) * M**2))
+
+def Pt_Pt_star(M, gamma):
+    return (1 / M) * ((2 / (gamma + 1)) * (1 + ((gamma - 1) / 2) * M**2))**((gamma + 1) / (2 * (gamma - 1)))
+
 
 # Open file to create LaTeX table
 filename = "fanno_flow_table.tex"
@@ -34,7 +35,7 @@ with open(filename, "w") as file:
 """)
 
     file.write("\\section*{Fanno Flow Table for $\\gamma = 1.4$}\n")
-    file.write(r"""\begin{longtable}{ccccc}
+    file.write(r"""\begin{longtable}{cccccc}
 
 \toprule
 $M$ & $4f L^*/D$ & $I/I^*$ & $T/T^*$ & $P_t/P_t^*$ & $P/P^*$ \\
@@ -50,7 +51,7 @@ $M$ & $4f L^*/D$ & $I/I^*$ & $T/T^*$ & $P_t/P_t^*$ & $P/P^*$ \\
     # Generate table rows
     for M in M_values:
         try:
-            file.write(f"{M:.2f} & {friction_length(M, gamma):.4f} & {entropy_ratio(M, gamma):.4f} & {T_T_star(M, gamma):.4f} & {Pt_Pt_star(M, gamma):.4f} & {P_P_star(M, gamma):.4f} \\\\\n")
+            file.write(f"{M:.2f} & {friction_length(M, gamma):.4f} & {I_Istar(M, gamma):.4f} & {T_T_star(M, gamma):.4f} & {Pt_Pt_star(M, gamma):.4f} & {P_P_star(M, gamma):.4f} \\\\\n")
         except ZeroDivisionError:
             continue  # Skip values where calcs are undefined
 
